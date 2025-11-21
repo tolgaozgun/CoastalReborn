@@ -7,6 +7,7 @@ using TMPro;
 using Core.Interfaces;
 using Core.Commands;
 using Core.Data;
+using Zenject;
 
 namespace UI.Controllers
 {
@@ -31,24 +32,17 @@ namespace UI.Controllers
         // Prefabs
         [SerializeField] private GameObject contractItemPrefab;
 
-        // Dependencies
-        private IContractsService contractsService;
-        private ICrewService crewService;
-        private TabletCommandInvoker commandInvoker;
+        // Dependencies injected via DI as per best practices
+        [Inject] private IContractsService contractsService;
+        [Inject] private ICrewService crewService;
+        [Inject] private TabletCommandInvoker commandInvoker;
 
         // UI state
         private List<GameObject> availableContractItems = new List<GameObject>();
         private List<GameObject> activeContractItems = new List<GameObject>();
 
-        public void Initialize(
-            IContractsService contractsService,
-            ICrewService crewService,
-            TabletCommandInvoker commandInvoker)
+        private void Start()
         {
-            this.contractsService = contractsService ?? throw new ArgumentNullException(nameof(contractsService));
-            this.crewService = crewService ?? throw new ArgumentNullException(nameof(crewService));
-            this.commandInvoker = commandInvoker ?? throw new ArgumentNullException(nameof(commandInvoker));
-
             InitializeFilters();
             InitializeButtons();
             SubscribeToEvents();

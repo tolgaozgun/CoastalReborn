@@ -4,28 +4,34 @@ Follow these steps exactly in Unity to implement the Tablet as Operations Hub mi
 
 ---
 
-## 📋 Phase 1: Service Layer Setup
+## 📋 Phase 1: Dependency Injection Setup
 
-### Step 1.1: Verify Services Exist
+### Step 1.1: Install Zenject
+1. Open Unity Package Manager (Window > Package Manager)
+2. Click "+" button > Add package from git URL
+3. Enter: `https://github.com/svermeulen/Zenject.git`
+4. Wait for installation to complete
+
+### Step 1.2: Verify Services Exist
 After the code generation, verify these services are available:
 - `CrewService` - Crew management and hiring
 - `ContractsService` - Contract creation and management
 - `IntelService` - Intelligence data handling
 - `UpgradeService` - Ship upgrade system
+- `TabletInstaller` - DI installer for tablet system
 
-### Step 1.2: Create Service GameObjects
-1. In your HarborScene, create empty GameObjects:
-   - "Services" (parent container)
-   - "Services/CrewService"
-   - "Services/ContractsService"
-   - "Services/IntelService"
-   - "Services/UpgradeService"
+### Step 1.3: Create Tablet Installer
+1. In your HarborScene, create empty GameObject named "TabletInstaller"
+2. Attach `TabletInstaller.cs` script
+3. Configure in Inspector:
+   - Assign service configurations (or use defaults)
+   - Assign UI prefabs (can leave empty for auto-creation)
 
-2. Attach the service scripts:
-   - `CrewService.cs` to CrewService object
-   - `ContractsService.cs` to ContractsService object
-   - `IntelService.cs` to IntelService object
-   - `UpgradeService.cs` to UpgradeService object
+### Step 1.4: Create Scene Context
+1. Right-click in Hierarchy > Zenject > Scene Context
+2. This enables DI in the scene
+3. The Scene Context will automatically find and run installers
+4. Verify TabletInstaller appears in the Installers list
 
 ---
 
@@ -219,20 +225,30 @@ For each screen controller:
 - Verify TabletUIController is assigned properly
 - Check that button onClick events are linked
 
-### Services Not Found
-- Ensure service objects exist in scene
-- Verify service scripts are attached
-- Check that tablet initialization is successful
+### DI/Services Not Working
+- Ensure Zenject is properly installed
+- Verify Scene Context exists in scene
+- Check that TabletInstaller appears in Scene Context installers
+- Verify all services are bound in TabletInstaller
+- Check Console for Zenject binding errors
 
 ### Prefab Missing Errors
 - Create the required item prefabs
-- Assign prefabs in screen controllers
+- Assign prefabs in TabletInstaller configuration
 - Verify controller scripts are attached to prefabs
+- Check that factories are properly bound in installer
 
 ### Commands Not Working
-- Check command invoker is initialized
-- Verify service references are not null
-- Check Console for validation errors
+- Check command invoker is bound in DI container
+- Verify command factories are properly injected
+- Check Console for Zenject resolution errors
+- Ensure all command dependencies are available
+
+### Injection Errors
+- Verify [Inject] attributes are used correctly
+- Check that interfaces are bound to implementations
+- Ensure no circular dependencies exist
+- Check Console for Zenject validation messages
 
 ---
 

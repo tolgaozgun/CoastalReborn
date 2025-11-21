@@ -6,22 +6,17 @@ using TMPro;
 using Core.Interfaces;
 using Core.Commands;
 using Core.Data;
+using Zenject;
 
 namespace UI.Controllers
 {
     /// <summary>
     /// Main controller for the tablet UI system.
     /// Manages all tablet screens and integrates with services.
-    /// Follows MVC pattern and clean architecture.
+    /// Follows MVC pattern and clean architecture with proper DI.
     /// </summary>
     public class TabletUIController : MonoBehaviour
     {
-        [Header("Service Dependencies")]
-        [SerializeField] private ICrewService crewService;
-        [SerializeField] private IContractsService contractsService;
-        [SerializeField] private IIntelService intelService;
-        [SerializeField] private IUpgradeService upgradeService;
-
         [Header("UI Components")]
         [SerializeField] private GameObject tabletPanel;
         [SerializeField] private TMP_Text fundsText;
@@ -37,8 +32,12 @@ namespace UI.Controllers
         [SerializeField] private GameObject intelPanel;
         [SerializeField] private GameObject upgradesPanel;
 
-        [Header("Command System")]
-        [SerializeField] private TabletCommandInvoker commandInvoker;
+        // Dependencies injected via DI as per best practices
+        [Inject] private ICrewService crewService;
+        [Inject] private IContractsService contractsService;
+        [Inject] private IIntelService intelService;
+        [Inject] private IUpgradeService upgradeService;
+        [Inject] private TabletCommandInvoker commandInvoker;
 
         // Screen controllers
         private ContractsScreenController contractsController;
@@ -52,7 +51,6 @@ namespace UI.Controllers
 
         private void Awake()
         {
-            InitializeDependencies();
             InitializeUI();
             InitializeScreenControllers();
         }
@@ -64,32 +62,8 @@ namespace UI.Controllers
         }
 
         /// <summary>
-        /// Initializes service dependencies with fallback to existing implementations.
-        /// </summary>
-        private void InitializeDependencies()
-        {
-            // Try to find services in the scene
-            if (crewService == null)
-                crewService = FindObjectOfType<CrewService>();
-
-            if (contractsService == null)
-                contractsService = FindObjectOfType<ContractsService>();
-
-            if (intelService == null)
-                intelService = FindObjectOfType<IntelService>();
-
-            if (upgradeService == null)
-                upgradeService = FindObjectOfType<UpgradeService>();
-
-            // Create command invoker if not assigned
-            if (commandInvoker == null)
-                commandInvoker = gameObject.AddComponent<TabletCommandInvoker>();
-
-            Debug.Log("[TabletUIController] Service dependencies initialized");
-        }
-
-        /// <summary>
         /// Initializes UI components and button listeners.
+        /// View contains only visual behavior and component references.
         /// </summary>
         private void InitializeUI()
         {
@@ -97,7 +71,7 @@ namespace UI.Controllers
             if (tabletPanel != null)
                 tabletPanel.SetActive(false);
 
-            // Button setup
+            // Button setup - UI responds to controller instructions
             if (contractsButton != null)
                 contractsButton.onClick.AddListener(() => ShowScreen(TabletScreen.Contracts));
 
@@ -118,17 +92,18 @@ namespace UI.Controllers
 
         /// <summary>
         /// Initializes individual screen controllers.
+        /// Controllers coordinate logic between Data and View.
         /// </summary>
         private void InitializeScreenControllers()
         {
-            // Contracts screen
+            // Contracts screen - DI handles constructor injection
             if (contractsPanel != null)
             {
                 contractsController = contractsPanel.GetComponent<ContractsScreenController>();
                 if (contractsController == null)
                     contractsController = contractsPanel.AddComponent<ContractsScreenController>();
 
-                contractsController.Initialize(contractsService, crewService, commandInvoker);
+                // DI will inject dependencies automatically
             }
 
             // Crew screen
@@ -137,8 +112,6 @@ namespace UI.Controllers
                 crewController = crewPanel.GetComponent<CrewScreenController>();
                 if (crewController == null)
                     crewController = crewPanel.AddComponent<CrewScreenController>();
-
-                crewController.Initialize(crewService, commandInvoker);
             }
 
             // Intel screen
@@ -147,8 +120,6 @@ namespace UI.Controllers
                 intelController = intelPanel.GetComponent<IntelScreenController>();
                 if (intelController == null)
                     intelController = intelPanel.AddComponent<IntelScreenController>();
-
-                intelController.Initialize(intelService, crewService, commandInvoker);
             }
 
             // Upgrades screen
@@ -157,8 +128,6 @@ namespace UI.Controllers
                 upgradesController = upgradesPanel.GetComponent<UpgradesScreenController>();
                 if (upgradesController == null)
                     upgradesController = upgradesPanel.AddComponent<UpgradesScreenController>();
-
-                upgradesController.Initialize(upgradeService, crewService, commandInvoker);
             }
 
             Debug.Log("[TabletUIController] Screen controllers initialized");
@@ -166,6 +135,7 @@ namespace UI.Controllers
 
         /// <summary>
         /// Subscribes to service events.
+        /// Controller coordinates logic between Data and View.
         /// </summary>
         private void SubscribeToEvents()
         {
