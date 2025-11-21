@@ -1,256 +1,293 @@
-# 🚀 Coastal Control - M0 Implementation Steps
+# 🚀 Coastal Control - M1 Implementation Steps
 
-Follow these steps exactly in Unity to implement the Bootstrap Refactor milestone.
+Follow these steps exactly in Unity to implement the Tablet as Operations Hub milestone.
 
 ---
 
-## 📋 Phase 1: Unity Project Setup
+## 📋 Phase 1: Service Layer Setup
 
-### Step 1.1: Package Configuration
-1. Open Unity Package Manager (Window > Package Manager)
-2. Install these packages:
-   - **Input System** (if not installed)
-   - **TextMeshPro** (if not installed)
-3. Configure Input System:
-   - Go to Edit > Project Settings > Player
-   - Under Other Settings, set "Active Input Handling" to "Both"
-   - Unity will restart
+### Step 1.1: Verify Services Exist
+After the code generation, verify these services are available:
+- `CrewService` - Crew management and hiring
+- `ContractsService` - Contract creation and management
+- `IntelService` - Intelligence data handling
+- `UpgradeService` - Ship upgrade system
 
-### Step 1.2: Create Scene Assets
-1. Create new folder structure:
-   ```
-   Assets/
-   ├── _Bootstrap/
-   ├── Core/
-   ├── Gameplay/
-   ├── UI/
-   ├── Shared/
-   ├── Scenes/
-   │   ├── Bootstrap/
-   │   ├── Harbor/
-   │   └── Loading/
-   ├── Art/
-   │   ├── Materials/
-   │   ├── Prefabs/
-   │   └── Models/
-   └── Settings/
-       ├── Input/
-       └── Physics/
-   ```
+### Step 1.2: Create Service GameObjects
+1. In your HarborScene, create empty GameObjects:
+   - "Services" (parent container)
+   - "Services/CrewService"
+   - "Services/ContractsService"
+   - "Services/IntelService"
+   - "Services/UpgradeService"
 
-2. Create **Bootstrap Scene**:
-   - File > New Scene (select Empty template)
-   - Save as `Assets/Scenes/Bootstrap/Bootstrap.unity`
-   - Delete the default Main Camera
-   - Create empty GameObject named "GameInitiator"
+2. Attach the service scripts:
+   - `CrewService.cs` to CrewService object
+   - `ContractsService.cs` to ContractsService object
+   - `IntelService.cs` to IntelService object
+   - `UpgradeService.cs` to UpgradeService object
 
-3. Create **HarborScene**:
-   - File > New Scene (select Empty template)
-   - Save as `Assets/Scenes/Harbor/Harbor.unity`
-   - Add Directional Light (rotated to 50, -30, 0)
-   - Add Main Camera at position (0, 5, -10) rotation (30, 0, 0)
-   - Create Ground:
-     - Create Cube, scale to (100, 1, 100)
-     - Position at (0, -0.5, 0)
-     - Name it "WaterPlane"
-   - Create Dock:
-     - Create Cube, scale to (10, 2, 4)
-     - Position at (0, 1, 5)
-     - Name it "Dock"
-   - Create Player Spawn Point:
-     - Create Empty GameObject
-     - Position at (0, 1, 0)
-     - Name it "PlayerSpawnPoint"
+---
 
-### Step 1.3: Input Actions Setup
-1. Right-click `Assets/Settings/Input/` > Create > Input Actions
-2. Name it "InputActions"
-3. Double-click to edit:
-   - Create Action Maps:
-     - **Navigation** (boat controls)
-     - **Tablet** (tablet UI)
-     - **Pause** (game pause)
+## 📋 Phase 2: Tablet UI Implementation
 
-   - In Navigation Action Map:
-     - Add Action "Move" (Type: Value, Control Type: Vector2)
-     - Add Action "Look" (Type: Value, Control Type: Vector2)
-     - Add Action "Boost" (Type: Button)
-     - Add Action "Brake" (Type: Button)
+### Step 2.1: Create Tablet Bootstrap
+1. In HarborScene, create empty GameObject named "TabletBootstrap"
+2. Attach `TabletBootstrap.cs` script
+3. Configure in Inspector:
+   - Auto Initialize: ✓
+   - Don't Destroy On Load: ✓
 
-   - In Tablet Action Map:
-     - Add Action "OpenTablet" (Type: Button)
-     - Add Action "CloseTablet" (Type: Button)
-     - Add Action "Navigate" (Type: Value, Control Type: Vector2)
-     - Add Action "Submit" (Type: Button)
-     - Add Action "Cancel" (Type: Button)
-
-   - In Pause Action Map:
-     - Add Action "TogglePause" (Type: Button)
-
-   - Save Asset
-   - Generate C# Class (check the box in Inspector)
-
-4. Set up input bindings:
-   - Navigation/Move: WASD, Arrow Keys, Left Stick
-   - Navigation/Look: Mouse Delta, Right Stick
-   - Navigation/Boost: Left Shift, Left Bumper
-   - Navigation/Brake: Space, Right Bumper
-   - Tablet/OpenTablet: Tab, Y Button
-   - Tablet/CloseTablet: Escape, B Button
-   - Pause/TogglePause: Escape, Start Button
-
-### Step 1.4: Create Basic Materials
-1. Create materials in `Assets/Art/Materials/`:
-   - **Water_Mat**: Blue color (50, 150, 255), smoothness 0.7
-   - **Dock_Mat**: Gray-brown color (120, 90, 60), smoothness 0.3
-   - **Boat_Mat**: White color (240, 240, 240), smoothness 0.4
-
-2. Apply materials:
-   - WaterPlane: Water_Mat
-   - Dock: Dock_Mat
-
-### Step 1.5: Basic UI Canvas Setup
-1. Create UI in `Assets/Scenes/Loading/LoadingScene.unity`:
-   - Create new scene, save as LoadingScene
+### Step 2.2: Create Tablet UI Structure
+1. Create UI Canvas:
    - Right-click in Hierarchy > UI > Canvas
-   - Name it "LoadingCanvas"
-   - Set Canvas Scaler:
-     - UI Scale Mode: Scale With Screen Size
-     - Reference Resolution: 1920x1080
-     - Match: 0.5
-   - Add loading elements:
-     - Text: "Loading..." (center screen, large font)
-     - Slider: Progress bar (center, below text)
-     - Text: Status message (below progress bar)
-
----
-
-## 📋 Phase 2: Code Implementation (I'll create these files)
-
-### Step 2.1: After I create the assembly definitions:
-1. You'll see these .asmdef files appear:
-   - `Assets/Core/Core.asmdef`
-   - `Assets/Gameplay/Gameplay.asmdef`
-   - `Assets/UI/UI.asmdef`
-   - `Assets/Shared/Shared.asmdef`
-
-2. Unity may ask to reload - accept this
-
-### Step 2.2: When I create the DI system:
-1. You'll see the DI container setup in `Assets/Core/Services/DI/`
-2. No action needed, just verify no compilation errors
-
-### Step 2.3: When I create the GameInitiator:
-1. The GameInitiator script will be attached to your Bootstrap scene's GameInitiator object
-2. Set it up:
-   - Select GameInitiator object
-   - In Inspector, you'll see configurable fields
-   - Assign the HarborScene to the "Initial Scene" field
-   - Assign the LoadingScene to "Loading Scene" field
-
-### Step 2.4: When I create the PlayerBoat:
-1. Create PlayerBoat prefab:
-   - Create a Capsule in HarborScene
-   - Scale to (2, 1, 4) for boat shape
-   - Add Rigidbody
-   - Position at PlayerSpawnPoint
-   - Apply Boat_Mat
-   - Add the PlayerBoat controller script (I'll create this)
-   - Drag to Project window to create prefab
-   - Delete from scene (will be spawned by code)
-
-### Step 2.5: When I create the Tablet UI:
-1. Create Tablet UI prefab:
-   - In HarborScene, create UI > Canvas
    - Name it "TabletCanvas"
    - Set Render Mode: Screen Space - Overlay
-   - Add TabletUI script (I'll create this)
-   - Add basic UI elements:
-     - Background panel (center screen, tablet-sized)
-     - Tab buttons placeholder
-   - Save as prefab in `Assets/Art/Prefabs/UI/`
-   - Delete from scene (will be spawned by code)
+   - Set Canvas Scaler: Scale With Screen Size, 1920x1080
+
+2. Create Main Tablet Panel:
+   - Create UI > Panel as child of TabletCanvas
+   - Name it "TabletPanel"
+   - Size: 1200x800, centered
+   - Add `TabletUIController.cs` script
+
+3. Create Header:
+   - UI > Image as child of TabletPanel
+   - Name: "Header"
+   - Anchor: top-stretch, height: 100
+   - Add Funds display (TMP_Text)
+   - Add Close button
+
+4. Create Navigation Tabs:
+   - Create UI > Horizontal Layout Group as child of TabletPanel
+   - Name: "NavigationTabs"
+   - Add 4 buttons: Contracts, Crew, Intel, Upgrades
+
+5. Create Content Panels (for each tab):
+   - ContractsPanel: ScrollRect for contract listings
+   - CrewPanel: Two ScrollRects (Available/Hired crew)
+   - IntelPanel: ScrollRect for intelligence listings
+   - UpgradesPanel: ScrollRect for upgrade listings
+
+### Step 2.3: Set Up Screen Controllers
+1. For each content panel, add the respective controller:
+   - ContractsPanel: `ContractsScreenController.cs`
+   - CrewPanel: `CrewScreenController.cs`
+   - IntelPanel: `IntelScreenController.cs`
+   - UpgradesPanel: `UpgradesScreenController.cs`
+
+2. Configure each controller:
+   - Assign scroll views
+   - Assign filter dropdowns
+   - Assign buttons
+
+### Step 2.4: Create Item Prefabs
+1. Contract Item Prefab:
+   - Create UI > Panel as prefab
+   - Name: "ContractItem"
+   - Add `ContractItemController.cs`
+   - Include: Title, Description, Reward, Difficulty, Region, Accept/Complete buttons
+
+2. Crew Item Prefab:
+   - Create UI > Panel as prefab
+   - Name: "CrewItem"
+   - Add `CrewItemController.cs`
+   - Include: Name, Biography, Skills, Salary, Role, Hire/Fire buttons
+
+3. Intel Item Prefab:
+   - Create UI > Panel as prefab
+   - Name: "IntelItem"
+   - Add `IntelItemController.cs`
+   - Include: Title, Source, Credibility, Verify/Cross-reference buttons
+
+4. Upgrade Item Prefab:
+   - Create UI > Panel as prefab
+   - Name: "UpgradeItem"
+   - Add `UpgradeItemController.cs`
+   - Include: Name, Description, Cost, Purchase button, Prerequisites
 
 ---
 
-## 📋 Phase 3: Testing
+## 📋 Phase 3: Data Models & Commands
 
-### Step 3.1: Build Settings
-1. File > Build Settings
-2. Add both scenes:
-   - Bootstrap.unity (index 0)
-   - HarborScene.unity (index 1)
-   - LoadingScene.unity (index 2)
-3. Uncheck all scenes except Bootstrap
-4. Bootstrap should be the only checked scene
+### Step 3.1: Verify Data Models
+Ensure these data model files exist in `Assets/Core/Data/`:
+- `CrewData.cs` - Crew member information and stats
+- `ContractData.cs` - Contract definitions and status
+- `IntelData.cs` - Intelligence data structures
+- `UpgradeData.cs` - Upgrade system data
 
-### Step 3.2: Test Run
-1. Make sure Bootstrap.unity is open
-2. Press Play
-3. Expected flow:
-   - Loading screen appears
-   - HarborScene loads
-   - PlayerBoat spawns
-   - You can move with WASD
-   - Press Tab to open tablet
-   - Press Escape to close tablet
+### Step 3.2: Verify Service Interfaces
+Ensure these interface files exist in `Assets/Core/Interfaces/`:
+- `ICrewService.cs`
+- `IContractsService.cs`
+- `IIntelService.cs`
+- `IUpgradeService.cs`
 
-### Step 3.3: Verify
-- No singletons are used
-- All services are properly injected
-- Clean scene loading/unloading
-- Input maps switch correctly between boat and tablet
+### Step 3.3: Verify Command System
+Ensure command files exist in `Assets/Core/Commands/`:
+- `ITabletCommand.cs` - Base command interface
+- `ContractCommands.cs` - Contract-related commands
+- `CrewCommands.cs` - Crew management commands
+- `IntelCommands.cs` - Intelligence commands
+- `UpgradeCommands.cs` - Upgrade commands
+- `TabletCommandInvoker.cs` - Command executor with undo/redo
+
+---
+
+## 📋 Phase 4: Integration Setup
+
+### Step 4.1: Wire Dependencies
+1. Select the TabletBootstrap object
+2. If needed, assign service prefabs to respective fields
+3. Assign tablet UI prefab to Tablet UI field
+
+### Step 4.2: Configure Tablet UI Controller
+1. Select TabletPanel with TabletUIController
+2. Assign service references (or leave null for auto-detection)
+3. Assign UI component references:
+   - Funds text
+   - Navigation buttons
+   - Screen panels
+
+### Step 4.3: Configure Screen Controllers
+For each screen controller:
+1. Assign scroll views
+2. Assign filter dropdowns
+3. Assign item prefabs
+4. Configure button listeners
+
+---
+
+## 📋 Phase 5: Testing
+
+### Step 5.1: Basic Functionality Test
+1. Press Play
+2. Press Tab to open tablet
+3. Verify:
+   - Tablet appears with all 4 tabs
+   - Funds display shows starting amount
+   - Navigation buttons switch screens
+   - Close button works
+
+### Step 5.2: Contract System Test
+1. Go to Contracts tab
+2. Verify:
+   - Available contracts appear
+   - Filters work (Region, Difficulty)
+   - Accepting contracts works (check Console)
+   - Contract completion testing
+
+### Step 5.3: Crew System Test
+1. Go to Crew tab
+2. Verify:
+   - Available crew appear
+   - Hiring crew works (check funds)
+   - Hired crew appear in hired section
+   - Role changes work
+   - Firing crew works
+
+### Step 5.4: Intel System Test
+1. Go to Intel tab
+2. Verify:
+   - Intel entries appear
+   - Filters work (Region, Source, Credibility)
+   - Cross-referencing works
+   - Crew verification works
+
+### Step 5.5: Upgrade System Test
+1. Go to Upgrades tab
+2. Verify:
+   - Upgrade nodes appear
+   - Categories filter works
+   - Purchase validation works
+   - Progress tracking works
+
+### Step 5.6: Command System Test
+1. Perform actions in tablet
+2. Verify:
+   - Commands execute successfully
+   - Undo functionality (Ctrl+Z) works in Editor
+   - Console shows proper logging
 
 ---
 
 ## 🔧 Common Issues & Solutions
 
-### Input System Errors
-- If you get "Input System is not initialized", restart Unity
-- Make sure "Active Input Handling" is set to "Both" or "Input System Package"
+### UI Not Appearing
+- Check that TabletCanvas is active
+- Verify TabletUIController is assigned properly
+- Check that button onClick events are linked
 
-### Assembly Definition Errors
-- If you see compilation errors about missing references:
-  1. Save all scenes
-  2. Close Unity
-  3. Delete Library folder
-  4. Reopen project (this rebuilds assembly references)
+### Services Not Found
+- Ensure service objects exist in scene
+- Verify service scripts are attached
+- Check that tablet initialization is successful
 
-### Scene Loading Issues
-- If HarborScene doesn't load:
-  1. Check that scenes are in Build Settings
-  2. Verify scene names match exactly in GameInitiator
-  3. Check Console for error messages
+### Prefab Missing Errors
+- Create the required item prefabs
+- Assign prefabs in screen controllers
+- Verify controller scripts are attached to prefabs
 
-### Input Not Working
-- If boat doesn't move:
-  1. Check InputActions asset is set up correctly
-  2. Verify PlayerBoat has the InputAction asset reference
-  3. Check that Navigation action map is enabled
+### Commands Not Working
+- Check command invoker is initialized
+- Verify service references are not null
+- Check Console for validation errors
 
 ---
 
 ## ✅ Success Criteria
 
-When M0 is complete, you should have:
+When M1 is complete, you should have:
 
-- [ ] Bootstrap scene loads immediately on Play
-- [ ] Loading screen shows during HarborScene load
-- [ ] HarborScene loads additively with water and dock
-- [ ] PlayerBoat spawns and responds to WASD input
-- [ ] Tablet UI opens/closes with Tab key
-- [ ] Input maps switch between boat and tablet modes
-- [ ] No singleton usage or DontDestroyOnLoad
+- [ ] Tablet opens/closes with Tab key
+- [ ] All 4 tabs (Contracts, Crew, Intel, Upgrades) functional
+- [ ] Contracts: View, accept, complete contracts
+- [ ] Crew: Hire, fire, change roles, view stats
+- [ ] Intel: View intel, verify with crew, cross-reference
+- [ ] Upgrades: Browse, purchase upgrades with prerequisites
+- [ ] Proper fund management across all systems
+- [ ] Command pattern with undo/redo support
+- [ ] Clean MVC architecture with DI
 - [ ] No compilation errors
-- [ ] Clean scene unload when stopping play mode
+- [ ] Proper service initialization and event handling
 
 ---
 
-## 📞 Next Steps
+## 📞 Integration Notes
 
-After completing these steps and verifying everything works:
-1. Let me know any issues encountered
-2. I'll provide the next phase implementation
-3. We'll proceed to M1 (Tablet Operations Hub) together
+### Key Features Implemented:
+1. **Contract Management**: Complete lifecycle from available to completed
+2. **Crew Management**: Hiring, firing, role assignment with effectiveness calculations
+3. **Intelligence System**: Data gathering, verification, and cross-referencing
+4. **Upgrade System**: Node-based upgrades with prerequisites
+5. **Command Pattern**: All operations use commands with undo/redo support
+6. **Event-Driven**: Services publish events, UI responds appropriately
+7. **Clean Architecture**: SOLID principles, dependency injection, separation of concerns
 
-Remember: This foundation is critical - getting the DI and scene loading right now will make all future features much easier to implement!
+### Input Integration:
+- Tab key opens/closes tablet
+- Esc key closes tablet (when open)
+- UI uses standard Unity navigation system
+
+### Data Persistence:
+- Current implementation uses in-memory data
+- Services generate mock data for demonstration
+- Easy to extend with save/load functionality
+
+### Performance Considerations:
+- UI updates only when data changes
+- Efficient filtering and searching
+- Object pooling for UI items (can be added later)
+
+---
+
+## 🎯 Next Steps
+
+After completing M1 implementation:
+1. Test thoroughly with the criteria above
+2. Let me know any issues encountered
+3. I'll provide M2 implementation planning
+4. We'll proceed to add actual gameplay mechanics and tablet interactions
+
+The tablet system is now a fully functional operations hub ready for gameplay integration!
