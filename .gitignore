@@ -25,25 +25,8 @@ ExportedObj/
 *.opendb
 *.VC.db
 
-# Unity3D generated meta files
-*.meta
-
 # Unity3D Generated Asset On Meta files
 *.resources.meta
-
-# Unity3D filetype
-*.unity
-
-# Unity3D filetype
-*.asset
-
-# Unity3D filetype
-*.prefab
-
-# Unity3D filetype
-*.mat
-*.anim
-*.controller
 
 # Build results
 [Dd]ebug/
